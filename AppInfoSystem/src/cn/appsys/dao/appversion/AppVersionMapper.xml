@@ -50,12 +50,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</resultMap>
 	
 	<!-- 根据app的id删除版本信息 -->
-	<select id="deleteAppVersionByAppInfo">
-		delete from app_version where appId = #{appId}		
-	</select>
+	<delete id="deleteAppVersionByAppInfo">
+		delete from app_version where appId = #{appId}
+	</delete>
 	
 	<!-- 修改版本地址 -->
 	<update id="updateAppVersionURL">
-		update app_version set apkFileName = null where id = #{id}
+		update app_version set apkFileName = null, downloadLink = null, apkLocPath = null where id = #{id}
 	</update>
+	
+	<!-- 根据AppId获取最新版本信息 -->
+	<select id="getAppVersion" resultType="AppVersion">
+		select * from app_version where appId = #{appId} 
+		order by creationDate DESC limit 1
+	</select>
 </mapper>

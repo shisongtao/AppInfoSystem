@@ -16,6 +16,9 @@ public class BackEndUser {
 	private Date creationDate;		//创建时间
 	private int modifyBy;			//更新者（来源于backend_user用户表的用户id）
 	private Date modifyDate;		//最新更新时间
+	
+	private String userTypeName;	//角色名称
+	
 	public int getId() {
 		return id;
 	}
@@ -69,6 +72,12 @@ public class BackEndUser {
 	}
 	public void setModifyDate(Date modifyDate) {
 		this.modifyDate = modifyDate;
+	}
+	public String getUserTypeName() {
+		return userTypeName;
+	}
+	public void setUserTypeName(String userTypeName) {
+		this.userTypeName = userTypeName;
 	}
 	
 }
