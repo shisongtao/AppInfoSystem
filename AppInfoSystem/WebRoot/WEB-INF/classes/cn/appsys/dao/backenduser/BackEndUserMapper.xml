@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.appsys.dao.backenduser.BackEndUserMapper">
+	<!-- 通过userCode获取BackEndUser -->
+	<select id="getLoginBackEndUser" resultType="BackEndUser">
+		select * from backend_user
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test="userCode != null and userCode != ''">
+				and userCode = #{userCode}
+			</if>
+		</trim>
+	</select>
+</mapper>
