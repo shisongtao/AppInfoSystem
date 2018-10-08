@@ -5,13 +5,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="cn.appsys.dao.backenduser.BackEndUserMapper">
 	<!-- 通过userCode获取BackEndUser -->
 	<select id="getLoginBackEndUser" resultType="BackEndUser">
-		select u.* ,d.valueName as userTypeName
-		 from backend_user u, data_dictionary d
-		 where u.userType = d.valueId 
-		 and d.typeCode = 'USER_TYPE'
-		<if test="userCode != null and userCode != ''">
-			and userCode = #{userCode}
-		</if>
-		
+		select * from backend_user
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test="userCode != null and userCode != ''">
+				and userCode = #{userCode}
+			</if>
+		</trim>
 	</select>
 </mapper>

@@ -59,10 +59,4 @@ public interface AppInfoService {
 	 * @return
 	 */
 	public AppInfo getAppInfoByAPK(String APKName);
-	/**
-	 * 更改AppInfo logo图片路径为null
-	 * @param id
-	 * @return
-	 */
-	public boolean updateAppInfoLoginPic(Integer id);
 }

@@ -47,10 +47,5 @@ public class AppVersionServiceImpl implements AppVersionService {
 		// TODO Auto-generated method stub
 		return appVersionMapper.updateAppVersionURL(id);
 	}
-	@Override
-	public AppVersion getAppVersion(Integer appId) {
-		// TODO Auto-generated method stub
-		return appVersionMapper.getAppVersion(appId);
-	}
 
 }

@@ -69,13 +69,4 @@ public class AppInfoServiceImpl implements AppInfoService {
 		return appInfoMapper.getAppInfoByAPK(APKName);
 	}
 
-	@Override
-	public boolean updateAppInfoLoginPic(Integer id) {
-		boolean flag = false;
-		if(appInfoMapper.updateAppInfoLoginPic(id) > 0) {
-			flag = true;
-		}
-		return flag;
-	}
-
 }

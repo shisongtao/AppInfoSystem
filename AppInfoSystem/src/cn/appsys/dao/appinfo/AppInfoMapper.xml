@@ -101,8 +101,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="interfaceLanguage != null">interfaceLanguage = #{interfaceLanguage},</if>
 			<if test="softwareSize != null">softwareSize = #{softwareSize},</if>
 			<if test="updateDate != null">updateDate = #{updateDate},</if>
-			<if test="devId != null and devId != 0">devId = #{devId},</if>
-			<if test="status != null and status != 0">status = #{status},</if>
+			<if test="devId != null">devId = #{devId},</if>
+			<if test="status != null">status = #{status},</if>
 			<if test="onSaleDate != null">onSaleDate = #{onSaleDate},</if>
 			<if test="offSaleDate != null">offSaleDate = #{offSaleDate},</if>
 			<if test="downloads != null">downloads = #{downloads},</if>
@@ -115,19 +115,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="logoLocPath != null">logoLocPath = #{logoLocPath},</if>
 			<if test="modifyBy != null">modifyBy = #{modifyBy},</if>
 			<if test="modifyDate != null">modifyDate = #{modifyDate},</if>
-			<if test="versionId != null and versionId != 0">versionId = #{versionId}</if>
+			<if test="versionId != null">versionId = #{versionId}</if>
 		</set>
 		where id = #{id}
 	</update>
-	
-	<!-- 更改AppInfo logo图片路径为null -->
-	<update id="updateAppInfoLoginPic">
-		update app_info set logoPicPath = null, logoLocPath = null where id = #{id}
-	</update>
-	
 	<!-- 删除App -->
 	<delete id="delAppInfo">
-		delete from app_info where id = #{id}
+		delete * from app_info where id = #{id}
 	</delete>
 	<!-- 查看App信息 -->
 	<select id="getAppInfo" resultType="AppInfo">

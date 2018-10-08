@@ -48,10 +48,4 @@ public interface AppVersionMapper {
 	 * @return
 	 */
 	public int updateAppVersionURL(@Param("id") Integer id);
-	/**
-	 * 根据AppId获取最新版本信息
-	 * @param appId
-	 * @return
-	 */
-	public AppVersion getAppVersion(@Param("appId") Integer appId);
 }
