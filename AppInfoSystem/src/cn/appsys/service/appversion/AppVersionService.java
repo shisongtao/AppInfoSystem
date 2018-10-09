@@ -47,4 +47,10 @@ public interface AppVersionService {
 	 * @return
 	 */
 	public int updateAppVersionURL(@Param("id") Integer id);
+	/**
+	 * 根据AppId获取最近版本Id
+	 * @param appId
+	 * @return
+	 */
+	public AppVersion getAppVersionId(@Param("appId") Integer appId);
 }

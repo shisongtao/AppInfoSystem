@@ -44,8 +44,21 @@ public interface AppVersionMapper {
 	public List<AppVersion> getAppVersionListByAppInfo(@Param("appId") Integer appId);
 
 	/**
-	 * 删除版本地址
+	 * 修改版本地址为Null
 	 * @return
 	 */
 	public int updateAppVersionURL(@Param("id") Integer id);
+	/**
+	 * 根据AppId获取最近版本Id
+	 * @param appId
+	 * @return
+	 */
+	public AppVersion getAppVersionId(@Param("appId") Integer appId);
+	/**
+	 * 根据条件获取版本数量
+	 * @param appId
+	 * @return
+	 */
+	public int count(@Param("appId") Integer appId);
+	
 }

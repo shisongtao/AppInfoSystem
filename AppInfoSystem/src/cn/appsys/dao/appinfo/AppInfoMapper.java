@@ -58,4 +58,10 @@ public interface AppInfoMapper {
 	 * @return
 	 */
 	public AppInfo getAppInfoByAPK(@Param("APKName")String APKName);
+	/**
+	 * 根据Id修改图片路径为null
+	 * @param id
+	 * @return
+	 */
+	public int updatePath(@Param("id")Integer id);
 }

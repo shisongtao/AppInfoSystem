@@ -59,4 +59,17 @@ public interface AppInfoService {
 	 * @return
 	 */
 	public AppInfo getAppInfoByAPK(String APKName);
+	/**
+	 * 根据Id修改图片路径为null
+	 * @param id
+	 * @return
+	 */
+	public boolean updatePath(Integer id);
+	/**
+	 * 修改上下架状态
+	 * @param appInfo
+	 * @return
+	 */
+	public boolean updateSaleStatus(AppInfo appInfo);
+	
 }

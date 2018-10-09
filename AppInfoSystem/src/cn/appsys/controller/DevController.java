@@ -38,7 +38,7 @@ import cn.appsys.tools.Constants;
 import cn.appsys.tools.PageSupport;
 
 @Controller
-@RequestMapping(value = "/dev")
+@RequestMapping(value = "/dev/flatform/app")
 public class DevController {
 	private Logger logger = Logger.getLogger(DevController.class);
 	@Resource
@@ -50,7 +50,8 @@ public class DevController {
 	@Resource
 	private AppVersionService appVersionService;
 	
-	@RequestMapping(value = "/flatform/app/list")
+	//app列表
+	@RequestMapping(value = "/list")
 	public String getAppInfoList(Model model,
 			@RequestParam(value = "querySoftwareName",required = false) String querySoftwareName,
 			@RequestParam(value = "queryStatus",required = false) String queryStatus,
@@ -146,8 +147,8 @@ public class DevController {
 		model.addAttribute("pages", pages);
 		return "developer/appinfolist";
 	}
-	
-	@RequestMapping(value ="/flatform/app/categorylevellist", method = RequestMethod.GET)
+	//分类列表
+	@RequestMapping(value ="/categorylevellist", method = RequestMethod.GET)
 	@ResponseBody
 	public Object getlevelList(@RequestParam("pid")String pid) {
 		List<AppCategory> appcateList = new ArrayList<AppCategory>();
@@ -160,19 +161,19 @@ public class DevController {
 	}
 	
 	//跳转页面，进入新增App基础信息页面
-	@RequestMapping(value = "/flatform/app/appinfoadd")
+	@RequestMapping(value = "/appinfoadd")
 	public String addAppInfo() {
 		return "developer/appinfoadd";	
 	}
 	//平台列表
-	@RequestMapping(value = "/flatform/app/datadictionarylist")
+	@RequestMapping(value = "/datadictionarylist")
 	@ResponseBody
 	public Object dataDictionaryList() {
 		List<DataDictionary> flatFormList = dataDictionaryService.getFlatFormList();
 		return flatFormList;	
 	}
 	//新增App基础信息
-	@RequestMapping(value = "/flatform/app/appinfoaddsave", method = RequestMethod.POST)
+	@RequestMapping(value = "/appinfoaddsave", method = RequestMethod.POST)
 	public String addAppInfoSave(AppInfo appInfo,
 			HttpSession session,
 			HttpServletRequest request,
@@ -257,7 +258,7 @@ public class DevController {
 	}
 	
 	//APKName判断
-	@RequestMapping(value = "/flatform/app/apkexist")
+	@RequestMapping(value = "/apkexist")
 	@ResponseBody
 	public Object apkName(@RequestParam("APKName")String APKName) {
 		Map<String,String> resultMap = new HashMap<String,String>();
@@ -276,7 +277,7 @@ public class DevController {
 	}
 	
 	//查看App基础信息
-	@RequestMapping(value = "/flatform/app/appview/{appinfoid}")
+	@RequestMapping(value = "/appview/{appinfoid}")
 	public String viewAppInfo(@PathVariable String appinfoid, Model model) {
 		AppInfo appInfo = appInfoService.getAppInfo(Integer.parseInt(appinfoid));
 		List<AppVersion> appVersionList = appVersionService.getAppVersionListByAppInfo(appInfo.getId());
@@ -286,7 +287,7 @@ public class DevController {
 	}
 	
 	//页面跳转，进入修改App基础信息页面
-	@RequestMapping(value = "/flatform/app/appinfomodify")
+	@RequestMapping(value = "/appinfomodify")
 	public String updateAppInfo(@RequestParam(value ="id", required = false) String id,
 			AppInfo appInfo, Model model) {
 		appInfo = appInfoService.getAppInfo(Integer.parseInt(id));
@@ -295,7 +296,7 @@ public class DevController {
 	}
 	
 	//修改App基础信息页面
-	@RequestMapping(value = "/flatform/app/appinfomodifysave", method = RequestMethod.POST)
+	@RequestMapping(value = "/appinfomodifysave", method = RequestMethod.POST)
 	public String updateAppInfoSave(AppInfo appInfo, 
 			HttpSession session,
 			HttpServletRequest request,
@@ -379,12 +380,13 @@ public class DevController {
 	}
 	
 	//删除App及其版本信息
-	@RequestMapping(value = "/flatform/app/delapp", method = RequestMethod.GET)
+	@RequestMapping(value = "/delapp", method = RequestMethod.GET)
+	@ResponseBody
 	public Object delApp(@RequestParam(value = "id", required = false) String id) {
 		Map<String,String> resultMap = new HashMap<String,String>();
 		AppInfo appInfo = appInfoService.getAppInfo(Integer.parseInt(id));
 		if(appInfo != null){
-			appVersionService.deleteAppVersionByAppInfo(appInfo.getId());
+		//	appVersionService.deleteAppVersionByAppInfo(appInfo.getId());
 			if(appInfoService.delAppInfo(Integer.parseInt(id))) {
 				resultMap.put("delResult", "true");
 			}else {
@@ -397,20 +399,20 @@ public class DevController {
 		
 	}
 	//页面跳转，进入App版本添加页面
-	@RequestMapping(value = "/flatform/app/appversionadd")
+	@RequestMapping(value = "/appversionadd")
 	public String addAppVersion(@RequestParam(value = "id", required = false)String id, Model model) {
 		List<AppVersion> appVersionList = appVersionService.getAppVersionListByAppInfo(Integer.parseInt(id));
 		model.addAttribute("appVersionList", appVersionList);
-		if(appVersionList == null || appVersionList.size() == 0) {
-			AppVersion appVersion = new AppVersion();
-			appVersion.setAppId(Integer.parseInt(id));
-			model.addAttribute("appVersion", appVersion);
-		}
+	
+		AppVersion appVersion = new AppVersion();
+		appVersion.setAppId(Integer.parseInt(id));
+		model.addAttribute("appVersion", appVersion);
+		
 		return "developer/appversionadd";	
 	}
 	
 	//添加App版本
-	@RequestMapping(value = "/flatform/app/addversionsave", method = RequestMethod.POST)
+	@RequestMapping(value = "/addversionsave", method = RequestMethod.POST)
 	public String addAppVersionSave(AppVersion appVersion, 
 			HttpSession session, 
 			HttpServletRequest request,
@@ -483,7 +485,7 @@ public class DevController {
 				return "developer/appversionadd";
 			}
 		}
-		
+	
 		appVersion.setCreatedBy(((DevUser)session.getAttribute(Constants.DEV_USER_SESSION)).getId());
 		appVersion.setCreationDate(new Date());
 		appVersion.setApkFileName(apkFileName);
@@ -493,14 +495,17 @@ public class DevController {
 		int result = appVersionService.addAppVersion(appVersion);
 		if(result > 0) {
 			AppInfo appInfo = appInfoService.getAppInfo(appVersion.getAppId());
-			appInfo.setVersionId(appVersion.getId());
+			logger.debug("appInfo id======================>"+appInfo.getId());
+			AppVersion av = appVersionService.getAppVersionId(appInfo.getId());
+			logger.debug("av id===================>"+av.getId());
+			appInfo.setVersionId(av.getId());
 			appInfoService.modifyAppInfo(appInfo);
 			return "redirect:/dev/flatform/app/list";
 		}
 		return "developer/appversionadd";		
 	}
 	//页面跳转，进入版本修改页面
-	@RequestMapping("/flatform/app/appversionmodify")
+	@RequestMapping("/appversionmodify")
 	public String updateAppVersion(@RequestParam(value = "vid", required = false) String vid,
 			@RequestParam(value = "aid", required = false) String aid,
 			Model model) {
@@ -517,7 +522,7 @@ public class DevController {
 	}
 	
 	//版本修改页面
-	@RequestMapping(value = "/flatform/app/appversionmodifysave", method = RequestMethod.POST)
+	@RequestMapping(value = "/appversionmodifysave", method = RequestMethod.POST)
 	public String updateAppVeresionSave(AppVersion appVersion, 
 			HttpSession session, 
 			HttpServletRequest request,
@@ -601,10 +606,75 @@ public class DevController {
 		}
 		return "developer/appversionmodify";
 	}
+	
+	//删除图片或apk
+	@RequestMapping(value = "/delfile", method = RequestMethod.GET)
+	@ResponseBody
+	public Object delFile(@RequestParam(value ="id",required = false)String id ,
+			@RequestParam(value ="flag",required = false)String flag) {
+		Map<String,String> resultMap = new HashMap<String,String>();
+		String filePath = null;
+		if(id == null || id.equals("") || flag == null || flag.equals("")) {
+			resultMap.put("result", "failed");
+		}else if("logo".equals(flag)) {//删除图片
+			filePath = appInfoService.getAppInfo(Integer.parseInt(id)).getLogoLocPath();
+			File file = new File(filePath);
+			if(file.exists()) {
+				if(file.delete()) {//删除服务器存储的物理文件
+					if(appInfoService.updatePath(Integer.parseInt(id))) {
+						resultMap.put("result", "success");
+					}else {
+						resultMap.put("result", "failed");
+					}
+				}
+			}	
+		}else if("apk".equals(flag)) {//删除apk
+			filePath = appVersionService.getAppVersionById(Integer.parseInt(id)).getApkLocPath();
+			File file = new File(filePath);
+			if(file.exists()) {
+				if(file.delete()) {//删除服务器存储的物理文件
+					if(appVersionService.updateAppVersionURL(Integer.parseInt(id)) > 0) {
+						resultMap.put("result", "success");
+					}else {
+						resultMap.put("result", "failed");
+					}
+				}
+			}	
+		}
+		return resultMap;		
+	}
+	
+	
 	//上架下架
-	@RequestMapping(value = "/dev/flatform/app/{appId}/sale")
-	public Object saleSwitchAjax() {
-		
-		return null;
+	@RequestMapping(value = "/{appId}/sale", method = RequestMethod.PUT)
+	@ResponseBody
+	public Object saleSwitchAjax(@PathVariable String appId, HttpSession session) {
+		HashMap<String,Object> resultMap = new HashMap<String, Object>();
+		Integer appIdInteger = 0;
+		try{
+			appIdInteger = Integer.parseInt(appId);
+		}catch(Exception e){
+			appIdInteger = 0;
+		}
+		resultMap.put("errorCode", "0");
+		resultMap.put("appId", appId);
+		if(appIdInteger > 0) {
+			try {
+				DevUser devUser = (DevUser)session.getAttribute(Constants.DEV_USER_SESSION);
+				AppInfo appInfo = new AppInfo();
+				appInfo.setId(appIdInteger);
+				appInfo.setModifyBy(devUser.getId());
+				if(appInfoService.updateSaleStatus(appInfo)) {
+					resultMap.put("resultMsg", "success");
+				}else {
+					resultMap.put("resultMsg", "success");
+				}
+			} catch (Exception e) {
+				resultMap.put("errorCode", "exception000001");
+			}
+		}else {
+			resultMap.put("errorCode", "param000001");
+		}
+		return resultMap;
 	}
 }

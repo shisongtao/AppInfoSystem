@@ -67,19 +67,31 @@ public class LoginController {
 	public String managerMain() {
 		return "backend/main";
 	}
+	@RequestMapping(value = "/manager/backend/main")
+	public String managerMain2() {
+		return "redirect:/manager/main.html";
+	}
 	@RequestMapping(value = "/dev/main.html")
 	public String devMain() {
 		return "developer/main";
+	}
+	@RequestMapping(value = "/dev/flatform/main")
+	public String devMain2() {
+		return "redirect:/dev/main.html";
 	}
 	
 	@RequestMapping(value = "/manager/logout")
 	public String managerLogout(HttpSession session) {
 		session.removeAttribute(Constants.USER_SESSION);
-		return "backendlogin";
+		return "redirect:/index";
 	}
 	@RequestMapping(value = "/dev/logout")
 	public String devLogout(HttpSession session) {
 		session.removeAttribute(Constants.DEV_USER_SESSION);
-		return "devlogin";
+		return "redirect:/index";
+	}
+	@RequestMapping(value = "/index")
+	public String index() {
+		return "index";
 	}
 }
